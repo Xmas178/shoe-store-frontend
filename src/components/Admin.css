@@ -1,0 +1,94 @@
+.admin {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.admin h1 {
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.admin-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #eee;
+}
+
+.admin-tabs button {
+    padding: 1rem 2rem;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: #666;
+    transition: all 0.3s;
+}
+
+.admin-tabs button:hover {
+    color: #667eea;
+}
+
+.admin-tabs button.active {
+    color: #667eea;
+    border-bottom-color: #667eea;
+}
+
+.admin-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+}
+
+/* TAULUKOT */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+table thead {
+    background-color: #f5f5f5;
+}
+
+table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 2px solid #ddd;
+}
+
+table td {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+table tr:hover {
+    background-color: #f9f9f9;
+}
+
+table tr.out-of-stock {
+    background-color: #fee;
+}
+
+.low-stock {
+    color: #ff6b6b;
+    font-weight: bold;
+}
+
+/* LOMAKKEET */
+.add-product form,
+.add-variant form {
+    max-width: 600px;
+}
