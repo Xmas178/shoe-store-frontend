@@ -15,15 +15,15 @@ function Home() {
 
             <div className="features">
                 <div className="feature">
-                    <h3>🚚 Ilmainen toimitus</h3>
+                    <h3> Ilmainen toimitus</h3>
                     <p>Yli 50€ tilauksiin</p>
                 </div>
                 <div className="feature">
-                    <h3>↩️ Helppo palautus</h3>
+                    <h3>↩ Helppo palautus</h3>
                     <p>14 päivän palautusoikeus</p>
                 </div>
                 <div className="feature">
-                    <h3>⭐ Laadukkaat tuotteet</h3>
+                    <h3> Laadukkaat tuotteet</h3>
                     <p>Vain parhaat brändit</p>
                 </div>
             </div>

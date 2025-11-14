@@ -57,7 +57,7 @@ function ProductList() {
                             <div className="product-info">
                                 <h3>{product.name}</h3>
                                 <p className="product-brand">{product.brand}</p>
-                                <p className="product-price">{product.price} €</p>
+                                <p className="product-price">{(product.base_price || 0).toFixed(2)} €</p>
                                 <p className="product-description">{product.description}</p>
                             </div>
                         </Link>

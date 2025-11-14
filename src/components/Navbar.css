@@ -1,5 +1,6 @@
 .navbar {
-    background-color: #282c34;
+    background-color: var(--primary-dark-blue);
+    /* Oli: #282c34 */
     padding: 1rem 2rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -13,7 +14,8 @@
 }
 
 .navbar-logo {
-    color: white;
+    color: var(--text-light);
+    /* Oli: white */
     font-size: 1.5rem;
     font-weight: bold;
     text-decoration: none;
@@ -33,18 +35,22 @@
 }
 
 .navbar-link {
-    color: white;
+    color: var(--text-light);
+    /* Oli: white */
     text-decoration: none;
     transition: color 0.3s;
 }
 
 .navbar-link:hover {
-    color: #61dafb;
+    color: var(--primary-yellow);
+    /* Oli: #61dafb, nyt keltainen hover */
 }
 
 .navbar-button {
-    background-color: #61dafb;
-    color: #282c34;
+    background-color: var(--primary-green);
+    /* Oli: #61dafb, nyt vihreä */
+    color: var(--text-light);
+    /* Oli: #282c34 */
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 4px;
@@ -54,5 +60,6 @@
 }
 
 .navbar-button:hover {
-    background-color: #4fa8c5;
+    background-color: var(--primary-blue);
+    /* Oli: #4fa8c5, nyt sininen hover */
 }

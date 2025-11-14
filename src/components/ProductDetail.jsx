@@ -90,9 +90,7 @@ function ProductDetail() {
                 <div className="product-detail-info">
                     <p className="product-brand">{product.brand}</p>
                     <h1>{product.name}</h1>
-                    <p className="product-price">{product.price} €</p>
-                    <p className="product-description">{product.description}</p>
-
+                    <p className="product-price">{(product.base_price || 0).toFixed(2)} €</p>
                     <div className="variants-section">
                         <h3>Valitse koko:</h3>
                         <div className="variants-grid">

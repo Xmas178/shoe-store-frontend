@@ -15,11 +15,25 @@ function Cart() {
 
     useEffect(() => {
         if (!user) {
-            navigate('/login');
+            setLoading(false);
             return;
         }
         fetchCart();
     }, [user, navigate]);
+
+    if (!user) {
+        return (
+            <div className="cart">
+                <h1>Ostoskori</h1>
+                <div className="empty-cart">
+                    <p>Kirjaudu sisään nähdäksesi ostoskorisi</p>
+                    <button onClick={() => navigate('/login')} className="continue-shopping">
+                        Kirjaudu sisään
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     const fetchCart = async () => {
         try {
@@ -27,25 +41,35 @@ function Cart() {
             const items = response.data.items || [];
             setCartItems(items);
 
-            // Hae tuotteet erikseen
-            const productIds = [...new Set(items.map(item => item.variant?.product_id).filter(Boolean))];
-            const productPromises = productIds.map(id => api.get(`/products/${id}`));
-            const productResponses = await Promise.all(productPromises);
+            if (items.length > 0) {
+                // Hae tuotteet vain jos korissa on jotain
+                const productIds = [...new Set(items.map(item => item.variant?.product_id).filter(Boolean))];
+                const productPromises = productIds.map(id => api.get(`/products/${id}`));
+                const productResponses = await Promise.all(productPromises);
 
-            const productsMap = {};
-            productResponses.forEach(res => {
-                productsMap[res.data.id] = res.data;
-            });
-            setProducts(productsMap);
+                const productsMap = {};
+                productResponses.forEach(res => {
+                    productsMap[res.data.id] = res.data;
+                });
+                setProducts(productsMap);
+            }
 
             setLoading(false);
+            setError(''); // Tyhjennä virhe jos lataus onnistui
         } catch (error) {
             console.error('Error fetching cart:', error);
-            setError('Ostoskorin lataus epäonnistui');
+            // Tarkista onko kyse oikeasta virheestä vai tyhjästä korista
+            if (error.response?.status === 404 || error.response?.status === 400) {
+                // Tyhjä ostoskori tai ei löydy - ei ole virhe
+                setCartItems([]);
+                setError('');
+            } else {
+                // Oikea virhe
+                setError('Ostoskorin lataus epäonnistui. Yritä myöhemmin uudelleen.');
+            }
             setLoading(false);
         }
     };
-
     const updateQuantity = async (itemId, newQuantity) => {
         if (newQuantity < 1) return;
 
@@ -72,7 +96,7 @@ function Cart() {
     const calculateTotal = () => {
         return cartItems.reduce((total, item) => {
             const product = products[item.variant?.product_id];
-            return total + ((product?.price || 0) * item.quantity);
+            return total + ((product?.base_price || 0) * item.quantity);
         }, 0).toFixed(2);
     };
 
@@ -146,7 +170,7 @@ function Cart() {
                                     </div>
 
                                     <div className="cart-item-price">
-                                        {((product?.price || 0) * item.quantity).toFixed(2)} €
+                                        {((product?.base_price || 0) * item.quantity).toFixed(2)} €
                                     </div>
 
                                     <button

@@ -128,12 +128,15 @@ function Admin() {
         if (!window.confirm('Haluatko varmasti poistaa tämän tuotteen?')) return;
 
         try {
-            await api.delete(`/products/${id}`);
+            console.log('Deleting product:', id); // DEBUG
+            const response = await api.delete(`/products/${id}`);
+            console.log('Delete response:', response); // DEBUG
             alert('Tuote poistettu');
             fetchProducts();
         } catch (error) {
             console.error('Error deleting product:', error);
-            alert('Tuotteen poisto epäonnistui');
+            console.error('Error details:', error.response?.data); // LISÄÄ TÄMÄ
+            alert(`Tuotteen poisto epäonnistui: ${error.response?.data?.detail || error.message}`);
         }
     };
 
@@ -141,12 +144,14 @@ function Admin() {
         if (!window.confirm('Haluatko varmasti poistaa tämän variantin?')) return;
 
         try {
+            console.log('Deleting variant:', id); // DEBUG
             await api.delete(`/variants/${id}`);
             alert('Variantti poistettu');
             fetchAllVariants();
         } catch (error) {
             console.error('Error deleting variant:', error);
-            alert('Variantin poisto epäonnistui');
+            console.error('Error details:', error.response?.data); // LISÄÄ TÄMÄ
+            alert(`Variantin poisto epäonnistui: ${error.response?.data?.detail || error.message}`);
         }
     };
 
@@ -231,7 +236,7 @@ function Admin() {
                                         <td>{product.id}</td>
                                         <td>{product.name}</td>
                                         <td>{product.brand}</td>
-                                        <td>{product.price} €</td>
+                                        <td>{(product.base_price || 0).toFixed(2)} €</td>
                                         <td>{product.category}</td>
                                         <td>
                                             <button
