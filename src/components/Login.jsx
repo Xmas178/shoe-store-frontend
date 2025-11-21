@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Login.css';
 
-function Login() {
+function Login({ t }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -12,6 +12,7 @@ function Login() {
     const { login } = useAuth();
     const navigate = useNavigate();
 
+    // Handle login form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('=== LOGIN FORM SUBMITTED ===');
@@ -25,6 +26,7 @@ function Login() {
         const result = await login(email, password);
         console.log('Login result:', result);
 
+        // Navigate to products page on success
         if (result.success) {
             console.log('SUCCESS - navigating to products');
             navigate('/products');
@@ -39,13 +41,16 @@ function Login() {
     return (
         <div className="login-container">
             <div className="login-box">
-                <h2>Kirjaudu sisään</h2>
+                {/* Login form heading */}
+                <h2>{t.loginTitle}</h2>
 
+                {/* Display error message if login fails */}
                 {error && <div className="error-message">{error}</div>}
 
                 <form onSubmit={handleSubmit}>
+                    {/* Email input field */}
                     <div className="form-group">
-                        <label>Sähköposti</label>
+                        <label>{t.email}</label>
                         <input
                             type="email"
                             value={email}
@@ -55,24 +60,27 @@ function Login() {
                         />
                     </div>
 
+                    {/* Password input field */}
                     <div className="form-group">
-                        <label>Salasana</label>
+                        <label>{t.password}</label>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            placeholder="Salasanasi"
+                            placeholder={t.password}
                         />
                     </div>
 
+                    {/* Submit button with loading state */}
                     <button type="submit" disabled={loading} className="login-button">
-                        {loading ? 'Kirjaudutaan...' : 'Kirjaudu'}
+                        {loading ? t.loggingIn : t.loginButton}
                     </button>
                 </form>
 
+                {/* Link to registration page */}
                 <p className="register-link">
-                    Eikö sinulla ole tiliä? <Link to="/register">Rekisteröidy tästä</Link>
+                    {t.dontHaveAccount} <Link to="/register">{t.registerButton}</Link>
                 </p>
             </div>
         </div>

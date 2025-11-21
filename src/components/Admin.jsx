@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import './Admin.css';
 
-function Admin() {
+function Admin({ t }) {
     const { user } = useAuth();
     const navigate = useNavigate();
 
@@ -13,6 +13,7 @@ function Admin() {
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('products');
 
+    // Form state for new product
     const [newProduct, setNewProduct] = useState({
         name: '',
         brand: '',
@@ -22,6 +23,7 @@ function Admin() {
         image_url: ''
     });
 
+    // Form state for new variant
     const [newVariant, setNewVariant] = useState({
         product_id: '',
         size: '',
@@ -29,6 +31,7 @@ function Admin() {
         stock_quantity: ''
     });
 
+    // Check authentication and fetch products on mount
     useEffect(() => {
         if (!user) {
             navigate('/login');
@@ -37,6 +40,7 @@ function Admin() {
         fetchProducts();
     }, [user, navigate]);
 
+    // Fetch all products from API
     const fetchProducts = async () => {
         try {
             const response = await api.get('/products');
@@ -48,9 +52,10 @@ function Admin() {
         }
     };
 
+    // Fetch all variants with associated product names
     const fetchAllVariants = async () => {
         try {
-            // Hae ensin tuotteet jos ei ole vielä haettu
+            // Fetch products first if not already loaded
             let productsList = products;
             if (products.length === 0) {
                 const productsResponse = await api.get('/products');
@@ -58,6 +63,7 @@ function Admin() {
                 setProducts(productsList);
             }
 
+            // Fetch variants for each product
             const allVariants = [];
             for (const product of productsList) {
                 const response = await api.get(`/variants/product/${product.id}`);
@@ -72,6 +78,7 @@ function Admin() {
         }
     };
 
+    // Handle new product form submission
     const handleAddProduct = async (e) => {
         e.preventDefault();
         try {
@@ -79,11 +86,12 @@ function Admin() {
                 name: newProduct.name,
                 brand: newProduct.brand,
                 description: newProduct.description,
-                base_price: parseFloat(newProduct.price),  // price → base_price
+                base_price: parseFloat(newProduct.price),
                 image_url: newProduct.image_url || null,
-                category: newProduct.category  // Lisää tämä jos backend tarvitsee
+                category: newProduct.category
             });
-            alert('Tuote lisätty onnistuneesti!');
+            alert(t.productAddedSuccess);
+            // Reset form
             setNewProduct({
                 name: '',
                 brand: '',
@@ -96,10 +104,11 @@ function Admin() {
             setActiveTab('products');
         } catch (error) {
             console.error('Error adding product:', error);
-            alert('Tuotteen lisäys epäonnistui');
+            alert(t.productAddFailed);
         }
     };
 
+    // Handle new variant form submission
     const handleAddVariant = async (e) => {
         e.preventDefault();
         try {
@@ -107,10 +116,11 @@ function Admin() {
                 product_id: parseInt(newVariant.product_id),
                 size: newVariant.size,
                 color: newVariant.color,
-                price: 0,  // TAI parseFloat(newVariant.price) jos lisäät price-kentän
-                stock: parseInt(newVariant.stock_quantity)  // stock_quantity → stock
+                price: 0,
+                stock: parseInt(newVariant.stock_quantity)
             });
-            alert('Variantti lisätty onnistuneesti!');
+            alert(t.variantAddedSuccess);
+            // Reset form
             setNewVariant({
                 product_id: '',
                 size: '',
@@ -120,67 +130,72 @@ function Admin() {
             fetchAllVariants();
         } catch (error) {
             console.error('Error adding variant:', error);
-            alert('Variantin lisäys epäonnistui');
+            alert(t.variantAddFailed);
         }
     };
 
+    // Delete product with confirmation
     const deleteProduct = async (id) => {
-        if (!window.confirm('Haluatko varmasti poistaa tämän tuotteen?')) return;
+        if (!window.confirm(t.confirmDeleteProduct)) return;
 
         try {
-            console.log('Deleting product:', id); // DEBUG
+            console.log('Deleting product:', id);
             const response = await api.delete(`/products/${id}`);
-            console.log('Delete response:', response); // DEBUG
-            alert('Tuote poistettu');
+            console.log('Delete response:', response);
+            alert(t.productDeleted);
             fetchProducts();
         } catch (error) {
             console.error('Error deleting product:', error);
-            console.error('Error details:', error.response?.data); // LISÄÄ TÄMÄ
-            alert(`Tuotteen poisto epäonnistui: ${error.response?.data?.detail || error.message}`);
+            console.error('Error details:', error.response?.data);
+            alert(`${t.productDeleteFailed}: ${error.response?.data?.detail || error.message}`);
         }
     };
 
+    // Delete variant with confirmation
     const deleteVariant = async (id) => {
-        if (!window.confirm('Haluatko varmasti poistaa tämän variantin?')) return;
+        if (!window.confirm(t.confirmDeleteVariant)) return;
 
         try {
-            console.log('Deleting variant:', id); // DEBUG
+            console.log('Deleting variant:', id);
             await api.delete(`/variants/${id}`);
-            alert('Variantti poistettu');
+            alert(t.variantDeleted);
             fetchAllVariants();
         } catch (error) {
             console.error('Error deleting variant:', error);
-            console.error('Error details:', error.response?.data); // LISÄÄ TÄMÄ
-            alert(`Variantin poisto epäonnistui: ${error.response?.data?.detail || error.message}`);
+            console.error('Error details:', error.response?.data);
+            alert(`${t.variantDeleteFailed}: ${error.response?.data?.detail || error.message}`);
         }
     };
 
+    // Show loading state
     if (loading) {
-        return <div className="loading">Ladataan...</div>;
+        return <div className="loading">{t.loading}</div>;
     }
 
     return (
         <div className="admin">
-            <h1>Ylläpitopaneeli</h1>
+            {/* Admin panel heading */}
+            <h1>{t.adminPanel}</h1>
 
+            {/* Tab navigation */}
             <div className="admin-tabs">
                 <button
                     className={activeTab === 'products' ? 'active' : ''}
                     onClick={() => setActiveTab('products')}
                 >
-                    Tuotteet
+                    {t.products}
                 </button>
                 <button
                     className={activeTab === 'addProduct' ? 'active' : ''}
                     onClick={() => setActiveTab('addProduct')}
                 >
-                    Lisää tuote
+                    {t.addProduct}
                 </button>
                 <button
                     className={activeTab === 'variants' ? 'active' : ''}
                     onClick={() => setActiveTab('variants')}
                 >
-                    Variantit
+                    {t.variants}
                 </button>
                 <button
                     className={activeTab === 'inventory' ? 'active' : ''}
@@ -188,7 +203,7 @@ function Admin() {
                         setActiveTab('inventory');
                         setLoading(true);
 
-                        // Hae variantit suoraan täällä
+                        // Fetch variants directly when tab is clicked
                         try {
                             const allVariants = [];
                             const productsList = products.length > 0 ? products : (await api.get('/products')).data;
@@ -203,7 +218,7 @@ function Admin() {
                             }
 
                             setVariants(allVariants);
-                            console.log('Variants loaded:', allVariants); // DEBUG
+                            console.log('Variants loaded:', allVariants);
                         } catch (error) {
                             console.error('Error:', error);
                         }
@@ -211,23 +226,24 @@ function Admin() {
                         setLoading(false);
                     }}
                 >
-                    Varastotilanne
+                    {t.inventory}
                 </button>
             </div>
 
             <div className="admin-content">
+                {/* Products list tab */}
                 {activeTab === 'products' && (
                     <div className="products-list">
-                        <h2>Kaikki tuotteet</h2>
+                        <h2>{t.allProducts}</h2>
                         <table>
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Nimi</th>
-                                    <th>Brändi</th>
-                                    <th>Hinta</th>
-                                    <th>Kategoria</th>
-                                    <th>Toiminnot</th>
+                                    <th>{t.productName}</th>
+                                    <th>{t.brand}</th>
+                                    <th>{t.price}</th>
+                                    <th>{t.category}</th>
+                                    <th>{t.actions}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -243,7 +259,7 @@ function Admin() {
                                                 className="delete-btn"
                                                 onClick={() => deleteProduct(product.id)}
                                             >
-                                                Poista
+                                                {t.delete}
                                             </button>
                                         </td>
                                     </tr>
@@ -253,12 +269,14 @@ function Admin() {
                     </div>
                 )}
 
+                {/* Add product form tab */}
                 {activeTab === 'addProduct' && (
                     <div className="add-product">
-                        <h2>Lisää uusi tuote</h2>
+                        <h2>{t.addNewProduct}</h2>
                         <form onSubmit={handleAddProduct}>
+                            {/* Product name field */}
                             <div className="form-group">
-                                <label>Nimi</label>
+                                <label>{t.productName}</label>
                                 <input
                                     type="text"
                                     value={newProduct.name}
@@ -267,8 +285,9 @@ function Admin() {
                                 />
                             </div>
 
+                            {/* Brand field */}
                             <div className="form-group">
-                                <label>Brändi</label>
+                                <label>{t.brand}</label>
                                 <input
                                     type="text"
                                     value={newProduct.brand}
@@ -277,8 +296,9 @@ function Admin() {
                                 />
                             </div>
 
+                            {/* Description field */}
                             <div className="form-group">
-                                <label>Kuvaus</label>
+                                <label>{t.productDescription}</label>
                                 <textarea
                                     value={newProduct.description}
                                     onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
@@ -287,8 +307,9 @@ function Admin() {
                                 />
                             </div>
 
+                            {/* Price field */}
                             <div className="form-group">
-                                <label>Hinta (€)</label>
+                                <label>{t.productPrice} (€)</label>
                                 <input
                                     type="number"
                                     step="0.01"
@@ -298,8 +319,9 @@ function Admin() {
                                 />
                             </div>
 
+                            {/* Category field */}
                             <div className="form-group">
-                                <label>Kategoria</label>
+                                <label>{t.productCategory}</label>
                                 <input
                                     type="text"
                                     value={newProduct.category}
@@ -308,8 +330,9 @@ function Admin() {
                                 />
                             </div>
 
+                            {/* Image URL field (optional) */}
                             <div className="form-group">
-                                <label>Kuvan URL (valinnainen)</label>
+                                <label>{t.productImage} ({t.optional})</label>
                                 <input
                                     type="url"
                                     value={newProduct.image_url}
@@ -317,23 +340,25 @@ function Admin() {
                                 />
                             </div>
 
-                            <button type="submit" className="submit-btn">Lisää tuote</button>
+                            <button type="submit" className="submit-btn">{t.addProduct}</button>
                         </form>
                     </div>
                 )}
 
+                {/* Add variant form tab */}
                 {activeTab === 'variants' && (
                     <div className="add-variant">
-                        <h2>Lisää uusi variantti</h2>
+                        <h2>{t.addNewVariant}</h2>
                         <form onSubmit={handleAddVariant}>
+                            {/* Product selection dropdown */}
                             <div className="form-group">
-                                <label>Tuote</label>
+                                <label>{t.product}</label>
                                 <select
                                     value={newVariant.product_id}
                                     onChange={(e) => setNewVariant({ ...newVariant, product_id: e.target.value })}
                                     required
                                 >
-                                    <option value="">Valitse tuote</option>
+                                    <option value="">{t.selectProduct}</option>
                                     {products.map(product => (
                                         <option key={product.id} value={product.id}>
                                             {product.name} ({product.brand})
@@ -342,8 +367,9 @@ function Admin() {
                                 </select>
                             </div>
 
+                            {/* Size field */}
                             <div className="form-group">
-                                <label>Koko (EU)</label>
+                                <label>{t.sizeEU}</label>
                                 <input
                                     type="text"
                                     value={newVariant.size}
@@ -353,8 +379,9 @@ function Admin() {
                                 />
                             </div>
 
+                            {/* Color field */}
                             <div className="form-group">
-                                <label>Väri</label>
+                                <label>{t.color}</label>
                                 <input
                                     type="text"
                                     value={newVariant.color}
@@ -363,8 +390,9 @@ function Admin() {
                                 />
                             </div>
 
+                            {/* Stock quantity field */}
                             <div className="form-group">
-                                <label>Varastomäärä</label>
+                                <label>{t.stockQuantity}</label>
                                 <input
                                     type="number"
                                     value={newVariant.stock_quantity}
@@ -373,36 +401,34 @@ function Admin() {
                                 />
                             </div>
 
-                            <button type="submit" className="submit-btn">Lisää variantti</button>
+                            <button type="submit" className="submit-btn">{t.addProduct}</button>
                         </form>
                     </div>
                 )}
 
+                {/* Inventory status tab */}
                 {activeTab === 'inventory' && (
                     <div className="inventory">
-                        <h2>Varastotilanne</h2>
+                        <h2>{t.inventory}</h2>
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Tuote</th>
-                                    <th>Koko</th>
-                                    <th>Väri</th>
-                                    <th>Varastossa</th>
-                                    <th>Toiminnot</th>
+                                    <th>{t.product}</th>
+                                    <th>{t.size}</th>
+                                    <th>{t.color}</th>
+                                    <th>{t.stock}</th>
+                                    <th>{t.actions}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {variants.map(variant => (
-                                    <tr key={variant.id} className={variant.stock
-                                        === 0 ? 'out-of-stock' : ''}>
-                                        <td>{variant.product_name || 'Ladataan...'}</td>
+                                    <tr key={variant.id} className={variant.stock === 0 ? 'out-of-stock' : ''}>
+                                        <td>{variant.product_name || t.loading}</td>
                                         <td>EU {variant.size}</td>
                                         <td>{variant.color}</td>
                                         <td>
-                                            <span className={variant.stock
-                                                < 5 ? 'low-stock' : ''}>
-                                                {variant.stock
-                                                } kpl
+                                            <span className={variant.stock < 5 ? 'low-stock' : ''}>
+                                                {variant.stock} {t.inStock}
                                             </span>
                                         </td>
                                         <td>
@@ -410,7 +436,7 @@ function Admin() {
                                                 className="delete-btn"
                                                 onClick={() => deleteVariant(variant.id)}
                                             >
-                                                Poista
+                                                {t.delete}
                                             </button>
                                         </td>
                                     </tr>

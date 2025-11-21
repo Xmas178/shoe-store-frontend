@@ -1,56 +1,42 @@
 .navbar {
-    background-color: var(--primary-dark-blue);
-    /* Oli: #282c34 */
+    background-color: #282c34;
     padding: 1rem 2rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.navbar-container {
-    max-width: 1200px;
-    margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.navbar-logo {
-    color: var(--text-light);
-    /* Oli: white */
+.navbar-brand a {
+    color: white;
     font-size: 1.5rem;
     font-weight: bold;
     text-decoration: none;
 }
 
-.navbar-menu {
-    display: flex;
-    list-style: none;
-    gap: 2rem;
-    margin: 0;
-    padding: 0;
+.navbar-brand a:hover {
+    color: #61dafb;
 }
 
-.navbar-item {
+.navbar-links {
     display: flex;
+    gap: 2rem;
     align-items: center;
 }
 
-.navbar-link {
-    color: var(--text-light);
-    /* Oli: white */
+.navbar-links a {
+    color: white;
     text-decoration: none;
     transition: color 0.3s;
 }
 
-.navbar-link:hover {
-    color: var(--primary-yellow);
-    /* Oli: #61dafb, nyt keltainen hover */
+.navbar-links a:hover {
+    color: #61dafb;
 }
 
-.navbar-button {
-    background-color: var(--primary-green);
-    /* Oli: #61dafb, nyt vihreä */
-    color: var(--text-light);
-    /* Oli: #282c34 */
+.navbar-links .logout-btn {
+    background-color: #61dafb;
+    color: #282c34;
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 4px;
@@ -59,7 +45,6 @@
     transition: background-color 0.3s;
 }
 
-.navbar-button:hover {
-    background-color: var(--primary-blue);
-    /* Oli: #4fa8c5, nyt sininen hover */
+.navbar-links .logout-btn:hover {
+    background-color: #4fa8c5;
 }
