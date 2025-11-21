@@ -1,128 +1,73 @@
-# Shoe Store - E-commerce Application
+# Shoe Store - Full-Stack E-Commerce Application
 
-A full-stack e-commerce application for selling shoes, built with React frontend and FastAPI backend.
+## Demo Video
+Watch the 30-second demo: [View on YouTube](https://youtu.be/TC2oMAiqvFo)
 
 ## Features
-
-### Customer Features
-- Browse product catalog with filtering
-- View detailed product information
-- User registration and authentication
-- Shopping cart management
+- Bilingual interface (English/Finnish) with language selector
+- Shopping cart with real-time updates
+- JWT authentication for secure user sessions
 - Product variants (sizes and colors)
-- Order placement
-
-### Admin Features
-- Product management (add, delete)
-- Variant management (sizes, colors, stock)
-- Inventory tracking
-- User role management
+- Admin panel for inventory management
+- Responsive design with Material-UI
 
 ## Tech Stack
 
-### Frontend
+**Frontend:**
 - React 18
-- React Router for navigation
-- Axios for API communication
-- Context API for state management
-- CSS3 for styling
+- Material-UI (MUI)
+- React Router
+- Recharts for data visualization
 
-### Backend
-- FastAPI (Python)
-- SQLAlchemy ORM
+**Backend:**
+- FastAPI
 - SQLite database
-- JWT authentication
-- Bcrypt password hashing
+- SQLAlchemy ORM
+- JWT token authentication
+- bcrypt password hashing
 
-## Installation
+## Getting Started
 
 ### Prerequisites
-- Node.js (v18 or higher)
+- Node.js 16+
 - Python 3.8+
-- pip
 
-### Backend Setup
+### Installation
+
+1. Clone the repository
 ```bash
-cd shoe-store-api
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn main:app --reload
+git clone https://github.com/Xmas178/shoe-store-frontend.git
+cd shoe-store-frontend
 ```
 
-Backend runs on `http://localhost:8000`
-
-### Frontend Setup
+2. Install dependencies
 ```bash
-cd shoe-store-frontend
 npm install
+```
+
+3. Start the development server
+```bash
 npm start
 ```
 
-Frontend runs on `http://localhost:3000`
-
-## API Documentation
-
-Once the backend is running, visit `http://localhost:8000/docs` for interactive API documentation.
-
-## Database Schema
-
-### Users
-- Authentication with JWT tokens
-- Role-based access control (admin/customer)
-
-### Products
-- Product catalog with brands and descriptions
-- Base pricing
-- Image URLs
-
-### Variants
-- Product variants (size, color)
-- Individual stock tracking
-- Size options in EU format
-
-### Shopping Cart
-- User-specific carts
-- Quantity management
-- Automatic total calculation
-
-## Authentication
-
-The application uses JWT tokens for authentication. Tokens are stored in localStorage and automatically included in API requests.
-
-Admin users have additional privileges for product and inventory management.
+The app will open at `http://localhost:3000`
 
 ## Project Structure
 ```
-shoe-store-frontend/
-├── src/
-│   ├── components/     # React components
-│   ├── context/        # Context providers
-│   ├── services/       # API service layer
-│   └── App.js
-└── public/
-
-shoe-store-api/
-├── models/            # SQLAlchemy models
-├── routes/            # API endpoints
-├── auth/              # Authentication logic
-└── main.py
+src/
+├── components/      # React components
+├── services/        # API service layer
+├── translations/    # EN/FI language files
+└── App.js          # Main application component
 ```
 
-## Future Enhancements
-
-- Payment integration (Stripe)
-- Product reviews and ratings
-- Order history
-- Email notifications
-- Search functionality
-- Image upload for products
-- Responsive mobile design
-
-## License
-
-This project is for portfolio purposes.
+## Related Repositories
+- Backend API: [shoe-store-api](https://github.com/Xmas178/shoe-store-api)
 
 ## Author
+**Xmas178**
+- Portfolio: www.tommilammi.fi
+- GitHub: @Xmas178
 
-Sami - Full-stack Developer
+## License
+This project is open source and available under the MIT License.
